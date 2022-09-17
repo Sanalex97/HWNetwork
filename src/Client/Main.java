@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 
 public class Main {
     public static void main(String[] args) throws UnknownHostException {
-        String host = getIPHost("localhost");
+        String host = getIPHost("netology.homework");
         int port = 8880;
 
         try (Socket clientSocket = new Socket(host, port);
@@ -18,12 +18,22 @@ public class Main {
                      PrintWriter(clientSocket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new
                      InputStreamReader(clientSocket.getInputStream()))) {
-            out.println("GET / HTTP/1.1\n" +
-                    "Host: localhost\n\n\n");
 
-            String resp = in.readLine();
+            while (!clientSocket.isClosed()) {
+                if (in.ready()) {
+                    String mes = in.readLine();
+                    System.out.println(mes);
 
-            System.out.println(resp);
+                    if (mes.equals("Write your name")) {
+                        out.println("Alex");
+                    } else if (mes.equals("Are you child? (yes/no)")) {
+                        out.println("yes");
+                    } else {
+                        clientSocket.close();
+                    }
+
+                }
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

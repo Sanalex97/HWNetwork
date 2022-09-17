@@ -17,8 +17,24 @@ public class Main {
 
             System.out.println("New connection accepted");
 
-            final String name = in.readLine();
-            out.println(String.format("Hi %s, your port is %d", name, clientSocket.getPort()));
+            while (!clientSocket.isClosed()) {
+                out.println("Write your name");
+
+                final String name = in.readLine();
+
+                out.println("Are you child? (yes/no)");
+
+                String mes = in.readLine();
+                if (mes != null) {
+                    if (mes.equals("yes")) {
+                        out.println(String.format("Welcome to the kids area, %s! Let's play!", name));
+                    } else if (mes.equals("no")) {
+                        out.println(String.format("Welcome to the adult zone, %s! Have a good rest, or a good working day!", name));
+                    } else {
+                        clientSocket.close();
+                    }
+                }
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
